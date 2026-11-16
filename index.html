@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17152b">
+  <meta name="description" content="Um jogo de combinar frutas. Escolha, combine três iguais e avance!">
+  <title>Fruit Match</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Fruit Match início"><span class="brand-mark">🍓</span><span>FRUIT <b>MATCH</b></span></a>
+      <div class="level-pill">FASE <strong id="level">01</strong></div>
+    </header>
+
+    <section class="game-head">
+      <div><p class="eyebrow">MISSÃO DA FASE</p><h1>Combine as frutas!</h1><p class="sub">Junte 3 frutas iguais para liberar espaço.</p></div>
+      <div class="score-box"><span>PONTOS</span><strong id="score">0</strong></div>
+    </section>
+
+    <section class="tray-panel" aria-label="Espaços de reserva">
+      <div class="tray-heading"><span>RESERVA</span><span id="tray-count">0 / 5</span></div>
+      <div class="tray" id="tray">
+        <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      </div>
+      <p class="tray-hint" id="tray-hint">Toque nas frutas para colocá-las aqui.</p>
+    </section>
+
+    <section class="board-wrap">
+      <div class="board-heading"><span>SEU TABULEIRO</span><span class="board-note">Toque para escolher</span></div>
+      <div class="board" id="board" aria-label="Tabuleiro de frutas"></div>
+    </section>
+
+    <footer class="actions">
+      <button class="tool-btn" id="undo" disabled><span>↶</span><small>Desfazer</small><b>🪙 100</b></button>
+      <button class="tool-btn" id="shuffle" disabled><span>⤨</span><small>Embaralhar</small><b>🪙 150</b></button>
+      <button class="main-btn" id="restart">RECOMEÇAR</button>
+    </footer>
+    <p class="footer-note">Uma partida de cada vez. Boa sorte! 🍊</p>
+  </main>
+
+  <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-icon" id="modal-icon">🎉</div>
+      <p class="eyebrow" id="modal-eyebrow">MUITO BEM!</p>
+      <h2 id="modal-title">Fase concluída!</h2>
+      <p id="modal-message">Você combinou todas as frutas.</p>
+      <button class="main-btn modal-btn" id="modal-action">CONTINUAR</button>
+    </div>
+  </div>
+  <script src="js/game.js"></script>
+</body>
+</html>
