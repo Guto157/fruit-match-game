@@ -54,3 +54,8 @@ button:focus-visible{outline:3px solid #ffd36e;outline-offset:3px}
 .level-detail-stats small{font-size:8px;letter-spacing:1px;color:#aaa5c2;font-weight:900}
 .level-detail-stats strong{font-size:16px;color:#fff}
 .level-detail-play{width:100%}
+
+/* Mapa com 50 fases em cinco mundos */
+.world-row{gap:7px}.world-row>div{min-width:0}.world-row small{white-space:nowrap}.world-arrow{width:27px;height:27px;flex:none;border:1px solid var(--line);border-radius:9px;background:#44334e;color:#fff;font-size:22px;line-height:18px}.world-arrow:disabled{opacity:.3;cursor:not-allowed}
+.level-map{height:clamp(150px,30vh,220px);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));align-items:center;justify-items:center;gap:8px;padding:8px 4px}.level-map:before{display:none}.level-node{width:clamp(42px,10vw,62px);max-width:100%;transform:none!important}.level-node:nth-child(n){transform:none!important}
+@media(max-height:680px){.level-map{height:145px}}

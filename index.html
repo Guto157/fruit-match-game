@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17152b">
 <title>Fruit Match</title>
-<link rel="stylesheet" href="css/style.css?v=boards-progressive-20261116">
+<link rel="stylesheet" href="css/style.css?v=levels-50-20261116">
 </head>
 <body>
 <main id="home-screen" class="screen home-screen">
@@ -16,14 +16,8 @@
   </header>
   <section class="home-main">
     <div class="home-title"><p class="eyebrow">SUA JORNADA COMEÇA AQUI</p><h1>Escolha sua fase</h1><p>Avance pelo mundo das frutas e supere novos desafios.</p></div>
-    <div class="world-row"><span class="world-icon">🌴</span><div><b>ILHA TROPICAL</b><small>Mundo 1 · 5 fases iniciais</small></div><span class="world-progress" id="world-progress">1 / 5</span></div>
-    <div class="level-map" id="level-map" aria-label="Seleção de fases">
-      <button class="level-node current" data-level="1"><small>FASE</small><b>1</b><span>⭐</span></button>
-      <button class="level-node" data-level="2" disabled><small>FASE</small><b>2</b><span>🔒</span></button>
-      <button class="level-node" data-level="3" disabled><small>FASE</small><b>3</b><span>🔒</span></button>
-      <button class="level-node" data-level="4" disabled><small>FASE</small><b>4</b><span>🔒</span></button>
-      <button class="level-node" data-level="5" disabled><small>FASE</small><b>5</b><span>🔒</span></button>
-    </div>
+    <div class="world-row"><span class="world-icon" id="world-icon">🌴</span><div><b id="world-name">ILHA TROPICAL</b><small id="world-subtitle">Mundo 1 · Fases 1 a 10</small></div><span class="world-progress" id="world-progress">1 / 50</span><button class="world-arrow" id="world-prev" aria-label="Mundo anterior" disabled>‹</button><button class="world-arrow" id="world-next" aria-label="Próximo mundo">›</button></div>
+    <div class="level-map" id="level-map" aria-label="Seleção de fases"></div>
     <div class="selected-level"><div><span class="eyebrow">FASE SELECIONADA</span><strong id="selected-level">01 · Começando a aventura</strong><small id="level-record">Ainda não concluída</small></div><button id="play-button" class="play-button">JOGAR <span>▶</span></button></div>
   </section>
   <nav class="home-nav" aria-label="Menu principal">
@@ -72,6 +66,6 @@
 <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
  <div class="modal"><div class="modal-icon" id="modal-icon">🎉</div><p class="eyebrow" id="modal-eyebrow">MUITO BEM!</p><h2 id="modal-title">Fase concluída!</h2><p id="modal-message"></p><button class="play-button modal-btn" id="modal-action">VOLTAR AO MAPA</button></div>
 </div>
-<script src="js/game.js?v=boards-progressive-20261116"></script>
-<script src="js/app.js?v=boards-progressive-20261116"></script>
+<script src="js/game.js?v=levels-50-20261116"></script>
+<script src="js/app.js?v=levels-50-20261116"></script>
 </body></html>

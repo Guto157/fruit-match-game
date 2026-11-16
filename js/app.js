@@ -3,19 +3,22 @@
  const $=id=>document.getElementById(id);
  const home=$('home-screen'),game=$('game-screen'),detail=$('level-detail-overlay');
  const names={1:'Primeiros passos',2:'Tabuleiro ampliado',3:'Seis colunas',4:'Desafio em expansão',5:'Grande tabuleiro'};
- let selected=1,unlocked=1,noticeTimer=null;
- function readProgress(){try{const n=Number(localStorage.getItem('fruitmatch.unlocked'));return Number.isInteger(n)?Math.max(1,Math.min(5,n)):1;}catch(_){return 1;}}
+ const worlds=[['ILHA TROPICAL','🌴'],['PRAIA DOURADA','🏖️'],['FLORESTA VERDE','🌳'],['MONTANHAS GELADAS','❄️'],['REINO MÁGICO','✨']];
+ let selected=1,unlocked=1,currentWorld=0,noticeTimer=null;
+ function readProgress(){try{const n=Number(localStorage.getItem('fruitmatch.unlocked'));let value=Number.isInteger(n)?Math.max(1,Math.min(50,n)):1;const results=JSON.parse(localStorage.getItem('fruitmatch.results')||'{}')||{};if(value===5&&results['5'])value=6;return value;}catch(_){return 1;}}
  function saveProgress(){try{localStorage.setItem('fruitmatch.unlocked',String(unlocked));}catch(_){}}
  function readResults(){try{return JSON.parse(localStorage.getItem('fruitmatch.results')||'{}')||{};}catch(_){return {};}}
  function saveResults(results){try{localStorage.setItem('fruitmatch.results',JSON.stringify(results));}catch(_){}}
  function formatTime(value){return String(Math.floor(value/60)).padStart(2,'0')+':'+String(value%60).padStart(2,'0');}
+ function changeWorld(delta){currentWorld=Math.max(0,Math.min(4,currentWorld+delta));selected=currentWorld*10+1;updateMap();}
  function updateMap(){
-  const results=readResults();
-  document.querySelectorAll('.level-node').forEach(node=>{const n=Number(node.dataset.level),record=results[n];node.disabled=n>unlocked;node.classList.toggle('current',n===selected);node.querySelector('span').textContent=n>unlocked?'🔒':record?'⭐'.repeat(record.stars):'☆';});
-  $('world-progress').textContent=unlocked+' / 5';
-  $('selected-level').textContent=String(selected).padStart(2,'0')+' · '+names[selected];
-  const record=results[selected];
-  $('level-record').textContent=record?'Melhor resultado: '+'⭐'.repeat(record.stars)+'☆'.repeat(3-record.stars)+' · '+formatTime(record.seconds):'Ainda não concluída · 3 estrelas sem erros';
+  const results=readResults(),start=currentWorld*10+1,end=start+9;
+  $('world-icon').textContent=worlds[currentWorld][1];$('world-name').textContent=worlds[currentWorld][0];$('world-subtitle').textContent='Mundo '+(currentWorld+1)+' · Fases '+start+' a '+end;
+  $('world-progress').textContent=unlocked+' / 50';$('world-prev').disabled=currentWorld===0;$('world-next').disabled=currentWorld===4;
+  const map=$('level-map');map.innerHTML='';
+  for(let n=start;n<=end;n++){const record=results[n],node=document.createElement('button');node.type='button';node.className='level-node';node.dataset.level=String(n);node.disabled=n>unlocked;node.innerHTML='<small>FASE</small><b>'+n+'</b><span>'+(n>unlocked?'🔒':record?'⭐'.repeat(record.stars):'☆')+'</span>';if(n===selected)node.classList.add('current');node.addEventListener('click',()=>openLevelDetails(n));map.appendChild(node);}
+  $('selected-level').textContent=String(selected).padStart(2,'0')+' · '+(names[selected]||'Desafio '+selected);
+  const record=results[selected];$('level-record').textContent=record?'Melhor resultado: '+'⭐'.repeat(record.stars)+'☆'.repeat(3-record.stars)+' · '+formatTime(record.seconds):'Ainda não concluída · 3 estrelas sem erros';
  }
  function openLevelDetails(n){
   if(n>unlocked||n<1)return;
@@ -32,7 +35,7 @@
  function showNotice(message){$('home-notice').textContent=message;$('home-notice').classList.add('show');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('home-notice').classList.remove('show'),2400);}
  function showHome(){game.classList.add('hidden');home.classList.remove('hidden');$('home-coins').textContent=$('game-coins').textContent;document.dispatchEvent(new Event('fruitmatch:stop'));updateMap();}
  function showGame(){closeLevelDetails();home.classList.add('hidden');game.classList.remove('hidden');document.dispatchEvent(new CustomEvent('fruitmatch:start',{detail:{level:selected}}));}
- document.querySelectorAll('.level-node').forEach(node=>node.addEventListener('click',()=>openLevelDetails(Number(node.dataset.level))));
+ $('world-prev').addEventListener('click',()=>changeWorld(-1));$('world-next').addEventListener('click',()=>changeWorld(1));
  $('play-button').addEventListener('click',showGame);
  $('level-detail-play').addEventListener('click',showGame);
  $('level-detail-close').addEventListener('click',closeLevelDetails);
@@ -41,7 +44,7 @@
  $('back-home').addEventListener('click',showHome);
  document.addEventListener('fruitmatch:exit',showHome);
  document.addEventListener('fruitmatch:won',event=>{
-  unlocked=Math.max(unlocked,Math.min(5,event.detail.level+1));saveProgress();
+  unlocked=Math.max(unlocked,Math.min(50,event.detail.level+1));saveProgress();
   const results=readResults(),key=String(event.detail.level),candidate={seconds:event.detail.seconds,stars:event.detail.stars,mistakes:event.detail.mistakes};
   const previous=results[key];
   if(!previous||candidate.stars>previous.stars||(candidate.stars===previous.stars&&candidate.seconds<previous.seconds))results[key]=candidate;

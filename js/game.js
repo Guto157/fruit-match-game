@@ -1,15 +1,15 @@
 (() => {
  'use strict';
- const FRUITS=['🍓','🍊','🍇','🍋','🍉','🍍','🥝','🍒','🥥','🍈','🍐','🥭','🫐','🍑','🍏','🍌'];
+ const FRUITS=['🍓','🍊','🍇','🍋','🍉','🍍','🥝','🍒','🥥','🍈','🍐','🥭','🫐','🍑','🍏','🍌','🍎','🍅','🫒','🥑','🌰','🫑','🌶️','🍆'];
  let COLS=4,ROWS=6;
  const MAX_TRAY=5;
- const LEVEL_CONFIG=[
-  {cols:4,rows:6,fruitKinds:8},
-  {cols:5,rows:6,fruitKinds:10},
-  {cols:6,rows:6,fruitKinds:12},
-  {cols:6,rows:7,fruitKinds:14},
-  {cols:6,rows:8,fruitKinds:16}
- ];
+ function getLevelConfig(n){
+  const fruitKinds=n<=5?[8,10,12,14,16][n-1]:Math.min(FRUITS.length,16+(n-5));
+  const sizes={8:[4,6],9:[5,6],10:[5,6],11:[6,6],12:[6,6],13:[6,7],14:[6,7],15:[6,8],16:[6,8],17:[7,8],18:[7,8],19:[8,8],20:[8,8],21:[7,9]};
+  let [cols,rows]=sizes[fruitKinds]||[8,9];
+  if(fruitKinds>=22){const layouts=[[8,9],[9,8],[6,12],[12,6]];[cols,rows]=layouts[(n-11)%layouts.length];}
+  return {cols,rows,fruitKinds};
+ }
  const $=id=>document.getElementById(id);
  const boardEl=$('board'),trayEl=$('tray');
  let board=[],tray=[],score=0,history=[],ended=false,level=1,coins=500,seconds=0,timerId=null,outcome=null,mistakes=0;
@@ -21,12 +21,13 @@
  function cloneTiles(items){return items.map(item=>item?{...item}:null);}
  function save(){history.push({board:cloneTiles(board),tray:cloneTiles(tray),score,seconds,mistakes});if(history.length>30)history.shift();}
  function start(levelNumber=level){
-  level=Math.max(1,Math.min(LEVEL_CONFIG.length,Number(levelNumber)||1));
-  const config=LEVEL_CONFIG[level-1];COLS=config.cols;ROWS=config.rows;
+  level=Math.max(1,Math.min(50,Number(levelNumber)||1));
+  const config=getLevelConfig(level);COLS=config.cols;ROWS=config.rows;
   boardEl.style.gridTemplateColumns='repeat('+COLS+',minmax(0,1fr))';
   boardEl.style.gridTemplateRows='repeat('+ROWS+',minmax(0,1fr))';
   boardEl.style.aspectRatio=COLS+'/'+ROWS;
-  board=shuffleArray(FRUITS.slice(0,config.fruitKinds).flatMap(f=>[1,2,3].map(()=>({id:nextTileId++,fruit:f}))));
+  const tiles=shuffleArray(FRUITS.slice(0,config.fruitKinds).flatMap(f=>[1,2,3].map(()=>({id:nextTileId++,fruit:f}))));
+  board=Array(COLS*ROWS).fill(null);tiles.forEach((tile,index)=>board[index]=tile);applyGravity();
   tray=[];score=0;history=[];ended=false;outcome=null;seconds=0;mistakes=0;
   clearInterval(timerId);$('timer').textContent='00:00';timerId=setInterval(()=>{seconds++;$('timer').textContent=formatTime();},1000);
   $('overlay').classList.add('hidden');$('game-level').textContent=String(level).padStart(2,'0');$('game-coins').textContent=coins;render();
