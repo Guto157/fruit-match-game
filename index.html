@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17152b">
 <title>Fruit Match</title>
-<link rel="stylesheet" href="css/style.css?v=levels-50-20261116">
+<link rel="stylesheet" href="css/style.css?v=shop-inventory-20261116">
 </head>
 <body>
 <main id="home-screen" class="screen home-screen">
@@ -41,7 +41,23 @@
       <button class="play-button level-detail-play" id="level-detail-play">JOGAR <span>▶</span></button>
     </section>
   </div>
-  <div class="home-notice" id="home-notice" role="status">Selecione uma fase no mapa para jogar.</div>
+
+  <div class="shop-overlay hidden" id="shop-overlay" role="dialog" aria-modal="true" aria-labelledby="shop-title">
+    <section class="shop-card">
+      <button class="shop-close" id="shop-close" aria-label="Fechar loja">×</button>
+      <p class="eyebrow">MERCADO DO FRUIT MATCH</p>
+      <h2 id="shop-title">Loja de itens</h2>
+      <p class="shop-intro">Troque suas moedas por ajudas para as próximas fases.</p>
+      <div class="shop-balance">🪙 <strong id="shop-coins">500</strong> moedas</div>
+      <div class="shop-items">
+        <article class="shop-item"><span class="shop-item-icon">↶</span><div><b>Desfazer</b><small>Volte uma jogada anterior.</small><span class="shop-stock" id="stock-undo">No estoque: 0</span></div><button data-buy="undo">🪙 80</button></article>
+        <article class="shop-item"><span class="shop-item-icon">⤨</span><div><b>Embaralhar</b><small>Mude a posição das frutas.</small><span class="shop-stock" id="stock-shuffle">No estoque: 0</span></div><button data-buy="shuffle">🪙 120</button></article>
+        <article class="shop-item"><span class="shop-item-icon">💡</span><div><b>Dica</b><small>Mostra uma fruta que pode formar trio.</small><span class="shop-stock" id="stock-hint">No estoque: 0</span></div><button data-buy="hint">🪙 40</button></article>
+      </div>
+      <p class="shop-footnote">Os itens comprados ficam guardados no seu aparelho.</p>
+    </section>
+  </div>
+\n  <div class="home-notice" id="home-notice" role="status">Selecione uma fase no mapa para jogar.</div>
 </main>
 <main id="game-screen" class="screen game-screen hidden">
   <header class="game-topbar">
@@ -66,6 +82,6 @@
 <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
  <div class="modal"><div class="modal-icon" id="modal-icon">🎉</div><p class="eyebrow" id="modal-eyebrow">MUITO BEM!</p><h2 id="modal-title">Fase concluída!</h2><p id="modal-message"></p><button class="play-button modal-btn" id="modal-action">VOLTAR AO MAPA</button></div>
 </div>
-<script src="js/game.js?v=levels-50-20261116"></script>
-<script src="js/app.js?v=levels-50-20261116"></script>
+<script src="js/game.js?v=shop-inventory-20261116"></script>
+<script src="js/app.js?v=shop-inventory-20261116"></script>
 </body></html>

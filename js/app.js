@@ -40,7 +40,7 @@
  $('level-detail-play').addEventListener('click',showGame);
  $('level-detail-close').addEventListener('click',closeLevelDetails);
  detail.addEventListener('click',event=>{if(event.target===detail)closeLevelDetails();});
- document.addEventListener('keydown',event=>{if(event.key==='Escape')closeLevelDetails();});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'){closeLevelDetails();closeShop();}});
  $('back-home').addEventListener('click',showHome);
  document.addEventListener('fruitmatch:exit',showHome);
  document.addEventListener('fruitmatch:won',event=>{
@@ -50,10 +50,27 @@
   if(!previous||candidate.stars>previous.stars||(candidate.stars===previous.stars&&candidate.seconds<previous.seconds))results[key]=candidate;
   saveResults(results);$('home-coins').textContent=event.detail.coins;updateMap();
  });
+ const shopOverlay=$('shop-overlay');
+ const shopPrices={undo:80,shuffle:120,hint:40};
+ function readInventory(){try{const data=JSON.parse(localStorage.getItem('fruitmatch.inventory')||'{}')||{};return {undo:Math.max(0,Number(data.undo)||0),shuffle:Math.max(0,Number(data.shuffle)||0),hint:Math.max(0,Number(data.hint)||0)};}catch(_){return {undo:0,shuffle:0,hint:0};}}
+ function renderShop(){const saved=localStorage.getItem('fruitmatch.coins'),balance=Math.max(0,saved===null?(Number($('home-coins').textContent)||0):(Number(saved)||0)),stock=readInventory();$('shop-coins').textContent=balance.toLocaleString('pt-BR');Object.keys(stock).forEach(key=>$('stock-'+key).textContent='No estoque: '+stock[key]);}
+ function openShop(){renderShop();shopOverlay.classList.remove('hidden');}
+ function closeShop(){shopOverlay.classList.add('hidden');}
+ $('shop-close').addEventListener('click',closeShop);
+ shopOverlay.addEventListener('click',event=>{if(event.target===shopOverlay)closeShop();});
+ shopOverlay.querySelectorAll('[data-buy]').forEach(button=>button.addEventListener('click',()=>{
+  const item=button.dataset.buy,cost=shopPrices[item],balance=Math.max(0,Number(localStorage.getItem('fruitmatch.coins'))||0);
+  if(balance<cost){showNotice('Moedas insuficientes para essa compra.');return;}
+  const stock=readInventory();stock[item]++;localStorage.setItem('fruitmatch.inventory',JSON.stringify(stock));localStorage.setItem('fruitmatch.coins',String(balance-cost));
+  $('home-coins').textContent=balance-cost;renderShop();showNotice('Item comprado e guardado no estoque!');
+ }));
  document.querySelectorAll('.nav-item').forEach(button=>button.addEventListener('click',()=>{
   document.querySelectorAll('.nav-item').forEach(item=>item.classList.remove('active'));button.classList.add('active');
-  const messages={map:'Selecione uma fase no mapa para jogar.',friends:'Amigos: sistema de convites será integrado na próxima etapa.',ranking:'Ranking: classificação online será integrada na próxima etapa.',shop:'Loja: moedas e diamantes estarão disponíveis nesta área.',upgrades:'Upgrades: recursos especiais serão adicionados nesta área.',videos:'Vídeos premiados: integração com anúncios será adicionada nesta área.'};
-  showNotice(messages[button.dataset.panel]||messages.map);
+  const panel=button.dataset.panel;
+  if(panel==='shop'){openShop();return;}
+  const messages={map:'Selecione uma fase no mapa para jogar.',friends:'Amigos: sistema de convites será integrado na próxima etapa.',ranking:'Ranking: classificação online será integrada na próxima etapa.',upgrades:'Upgrades: recursos especiais serão adicionados nesta área.',videos:'Vídeos premiados: integração com anúncios será adicionada nesta área.'};
+  showNotice(messages[panel]||messages.map);
  }));
+
  unlocked=readProgress();updateMap();
 })();
