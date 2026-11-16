@@ -1,7 +1,15 @@
 (() => {
  'use strict';
- const FRUITS=['🍓','🍊','🍇','🍋','🍉','🍍','🥝','🍒'];
- const COLS=4,ROWS=6,MAX_TRAY=5;
+ const FRUITS=['🍓','🍊','🍇','🍋','🍉','🍍','🥝','🍒','🥥','🍈','🍐','🥭','🫐','🍑','🍏','🍌'];
+ let COLS=4,ROWS=6;
+ const MAX_TRAY=5;
+ const LEVEL_CONFIG=[
+  {cols:4,rows:6,fruitKinds:8},
+  {cols:5,rows:6,fruitKinds:10},
+  {cols:6,rows:6,fruitKinds:12},
+  {cols:6,rows:7,fruitKinds:14},
+  {cols:6,rows:8,fruitKinds:16}
+ ];
  const $=id=>document.getElementById(id);
  const boardEl=$('board'),trayEl=$('tray');
  let board=[],tray=[],score=0,history=[],ended=false,level=1,coins=500,seconds=0,timerId=null,outcome=null,mistakes=0;
@@ -13,7 +21,13 @@
  function cloneTiles(items){return items.map(item=>item?{...item}:null);}
  function save(){history.push({board:cloneTiles(board),tray:cloneTiles(tray),score,seconds,mistakes});if(history.length>30)history.shift();}
  function start(levelNumber=level){
-  level=Number(levelNumber)||1;board=shuffleArray(FRUITS.flatMap(f=>[1,2,3].map(()=>({id:nextTileId++,fruit:f}))));tray=[];score=0;history=[];ended=false;outcome=null;seconds=0;mistakes=0;
+  level=Math.max(1,Math.min(LEVEL_CONFIG.length,Number(levelNumber)||1));
+  const config=LEVEL_CONFIG[level-1];COLS=config.cols;ROWS=config.rows;
+  boardEl.style.gridTemplateColumns='repeat('+COLS+',minmax(0,1fr))';
+  boardEl.style.gridTemplateRows='repeat('+ROWS+',minmax(0,1fr))';
+  boardEl.style.aspectRatio=COLS+'/'+ROWS;
+  board=shuffleArray(FRUITS.slice(0,config.fruitKinds).flatMap(f=>[1,2,3].map(()=>({id:nextTileId++,fruit:f}))));
+  tray=[];score=0;history=[];ended=false;outcome=null;seconds=0;mistakes=0;
   clearInterval(timerId);$('timer').textContent='00:00';timerId=setInterval(()=>{seconds++;$('timer').textContent=formatTime();},1000);
   $('overlay').classList.add('hidden');$('game-level').textContent=String(level).padStart(2,'0');$('game-coins').textContent=coins;render();
  }

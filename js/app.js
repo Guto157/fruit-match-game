@@ -2,7 +2,7 @@
  'use strict';
  const $=id=>document.getElementById(id);
  const home=$('home-screen'),game=$('game-screen'),detail=$('level-detail-overlay');
- const names={1:'Começando a aventura',2:'Mais frutas, mais desafios',3:'Hora de pensar rápido',4:'Desafio tropical',5:'Grande combinação'};
+ const names={1:'Primeiros passos',2:'Tabuleiro ampliado',3:'Seis colunas',4:'Desafio em expansão',5:'Grande tabuleiro'};
  let selected=1,unlocked=1,noticeTimer=null;
  function readProgress(){try{const n=Number(localStorage.getItem('fruitmatch.unlocked'));return Number.isInteger(n)?Math.max(1,Math.min(5,n)):1;}catch(_){return 1;}}
  function saveProgress(){try{localStorage.setItem('fruitmatch.unlocked',String(unlocked));}catch(_){}}
