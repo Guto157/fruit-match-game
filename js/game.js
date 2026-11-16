@@ -8,7 +8,8 @@
   const sizes={8:[4,6],9:[5,6],10:[5,6],11:[6,6],12:[6,6],13:[6,7],14:[6,7],15:[6,8],16:[6,8],17:[7,8],18:[7,8],19:[8,8],20:[8,8],21:[7,9]};
   let [cols,rows]=sizes[fruitKinds]||[8,9];
   if(fruitKinds>=22){const layouts=[[8,9],[9,8],[6,12],[12,6]];[cols,rows]=layouts[(n-11)%layouts.length];}
-  return {cols,rows,fruitKinds};
+  const iceCount=n<4?0:Math.min(Math.floor(cols*rows*0.25),2+Math.floor((n-4)/3)*2);
+  return {cols,rows,fruitKinds,iceCount,iceLayers:n>=15?2:1};
  }
  const $=id=>document.getElementById(id);
  const boardEl=$('board'),trayEl=$('tray');
@@ -30,6 +31,8 @@
   boardEl.style.gridTemplateRows='repeat('+ROWS+',minmax(0,1fr))';
   boardEl.style.aspectRatio=COLS+'/'+ROWS;
   const tiles=shuffleArray(FRUITS.slice(0,config.fruitKinds).flatMap(f=>[1,2,3].map(()=>({id:nextTileId++,fruit:f}))));
+  const icedPositions=new Set(shuffleArray(Array.from({length:tiles.length},(_,i)=>i)).slice(0,config.iceCount));
+  tiles.forEach((tile,index)=>{if(icedPositions.has(index))tile.ice=config.iceLayers;});
   board=Array(COLS*ROWS).fill(null);tiles.forEach((tile,index)=>board[index]=tile);applyGravity();
   tray=[];score=0;history=[];ended=false;outcome=null;seconds=0;mistakes=0;maxTray=BASE_TRAY;extraSlotUsed=false;
   clearInterval(timerId);$('timer').textContent='00:00';timerId=setInterval(()=>{seconds++;$('timer').textContent=formatTime();},1000);
@@ -39,10 +42,11 @@
  function capturePositions(){const positions=new Map();boardEl.querySelectorAll('.fruit[data-tile-id]').forEach(el=>positions.set(Number(el.dataset.tileId),el.getBoundingClientRect()));return positions;}
  function render(animateFrom=null){
   boardEl.innerHTML='';
-  board.forEach((tile,index)=>{const el=document.createElement('button');el.type='button';el.className='fruit'+(tile?'':' empty');el.textContent=tile?.fruit||'';el.disabled=!tile||ended;if(tile){el.dataset.tileId=String(tile.id);el.setAttribute('aria-label','Escolher '+tile.fruit);el.addEventListener('click',()=>choose(index));}else{el.setAttribute('aria-label','Espaço vazio');}boardEl.appendChild(el);});
+  board.forEach((tile,index)=>{const el=document.createElement('button');el.type='button';el.className='fruit'+(tile?'':' empty');el.textContent=tile?.fruit||'';el.disabled=!tile||ended;if(tile){el.dataset.tileId=String(tile.id);if(tile.ice>0){el.classList.add('iced');const frost=document.createElement('span');frost.className='ice-mark';frost.textContent=tile.ice>1?'❄️':'🧊';el.appendChild(frost);}el.setAttribute('aria-label',tile.ice>0?'Quebrar gelo de '+tile.fruit:'Escolher '+tile.fruit);el.addEventListener('click',()=>choose(index));}else{el.setAttribute('aria-label','Espaço vazio');}boardEl.appendChild(el);});
   if(animateFrom){boardEl.querySelectorAll('.fruit[data-tile-id]').forEach(el=>{const old=animateFrom.get(Number(el.dataset.tileId));if(!old)return;const now=el.getBoundingClientRect();const dx=old.left-now.left,dy=old.top-now.top;if(Math.abs(dx)+Math.abs(dy)>1){el.animate([{transform:'translate('+dx+'px,'+dy+'px)'},{transform:'translate(0,0)'}],{duration:360,easing:'cubic-bezier(.2,.75,.25,1)'});}});}
   trayEl.innerHTML='';for(let i=0;i<maxTray;i++){const slot=document.createElement('div');slot.className='slot'+(tray[i]?' filled':'');slot.textContent=tray[i]?.fruit||'';trayEl.appendChild(slot);}
   $('tray-count').textContent=tray.length+' / '+maxTray;$('score').textContent=score.toLocaleString('pt-BR');$('game-coins').textContent=coins;
+  const iceLeft=board.reduce((total,tile)=>total+(tile?.ice>0?1:0),0);$('mission-title').textContent=iceLeft?'Quebre o gelo e retire todas as frutas!':'Retire todas as frutas!';$('mission-status').textContent=iceLeft?'🧊 '+iceLeft+' '+(iceLeft===1?'bloco':'blocos'):'🍓 🍊 🍇';
   const stock=readInventory();
   $('undo').disabled=!history.length||ended||(coins<100&&stock.undo<1);$('extra-slot').disabled=ended||extraSlotUsed||(coins<150&&stock.extraSlot<1);$('hint').disabled=ended||!getHintFruit()||(coins<50&&stock.hint<1);
   $('undo').querySelector('b').textContent=stock.undo?'🎒 '+stock.undo+' no estoque':'🪙 100';
@@ -58,7 +62,7 @@
  function choose(index){
   if(ended||!board[index])return;
   const oldPositions=capturePositions();save();
-  const tile=board[index];board[index]=null;tray.push(tile);
+  const tile=board[index];if(tile.ice>0){tile.ice=Math.max(0,tile.ice-1);render(oldPositions);return;}board[index]=null;tray.push(tile);
   const matches=tray.filter(item=>item.fruit===tile.fruit).length;
   if(matches>=3){let removed=0;tray=tray.filter(item=>{if(item.fruit===tile.fruit&&removed<3){removed++;return false;}return true;});score+=30;}
   applyGravity();
