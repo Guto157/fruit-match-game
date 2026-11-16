@@ -11,7 +11,7 @@
  $("undo").addEventListener("click",()=>{if(!history.length||ended||coins<100)return;coins-=100;const s=history.pop();board=s.board;tray=s.tray;score=s.score;$("game-coins").textContent=coins;render();});
  $("shuffle").addEventListener("click",()=>{if(ended||coins<150)return;save();coins-=150;$("game-coins").textContent=coins;const pos=board.map((x,i)=>x?i:-1).filter(i=>i>=0),vals=pos.map(i=>board[i]);for(let i=vals.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[vals[i],vals[j]]=[vals[j],vals[i]];}pos.forEach((p,i)=>board[p]=vals[i]);render();});
  $("hint").addEventListener("click",()=>{if(ended||coins<50)return;const candidate=board.find(x=>x&&tray.filter(y=>y===x).length>=2);if(!candidate)return;coins-=50;$("game-coins").textContent=coins;const tile=[...boardEl.children].find(el=>el.textContent===candidate);if(tile){tile.animate([{transform:"scale(1)",filter:"brightness(1)"},{transform:"scale(1.12)",filter:"brightness(1.8)"},{transform:"scale(1)",filter:"brightness(1)"}],{duration:650});}});
- $("modal-action").addEventListener("click",()=>{if(board.every(x=>!x)){}else{}$("overlay").classList.add("hidden");document.dispatchEvent(new CustomEvent("fruitmatch:exit"));});
+ $("modal-action").addEventListener("click",()=>{if(board.every(x=>!x)){ $("overlay").classList.add("hidden"); document.dispatchEvent(new CustomEvent("fruitmatch:exit")); }else{ start(level); }});
  document.addEventListener("fruitmatch:start",e=>start(e.detail?.level||1));
  document.addEventListener("fruitmatch:stop",()=>clearInterval(timerId));
 })();
