@@ -27,3 +27,14 @@ O perfil, amigos, rankings online, loja real, anúncios e sincronização ainda 
 
 ## Testar
 Abra `index.html` em um navegador ou publique o repositório com GitHub Pages.
+
+## Queda das frutas
+Quando uma fruta é retirada, as frutas que estão acima dela na mesma coluna descem com animação contínua até preencher os espaços vazios. Elas não são removidas e recriadas visualmente.
+
+## Estrelas e recordes
+- 3 estrelas: concluir sem erros.
+- 2 estrelas: concluir com 1 erro.
+- 1 estrela: concluir com 2 ou mais erros.
+- Um erro é registrado cada vez que a reserva chega a 4 frutas ocupadas. Se chegar a 5, a partida termina em derrota.
+- Ao selecionar uma fase no mapa, o jogo mostra o melhor resultado salvo: estrelas e tempo.
+- O recorde prioriza mais estrelas; em caso de empate, fica o menor tempo.
