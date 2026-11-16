@@ -4,7 +4,7 @@
  const home=$("home-screen"),game=$("game-screen");
  const names={1:"Começando a aventura",2:"Mais frutas, mais desafios",3:"Hora de pensar rápido",4:"Desafio tropical",5:"Grande combinação"};
  function selectLevel(n){if(n>unlocked)return;selected=n;document.querySelectorAll(".level-node").forEach(node=>node.classList.toggle("current",Number(node.dataset.level)===selected));$("selected-level").textContent=String(n).padStart(2,"0")+" · "+(names[n]||"Nova aventura");}
- function showHome(){game.classList.add("hidden");home.classList.remove("hidden");document.dispatchEvent(new Event("fruitmatch:stop"));}
+ function showHome(){$("home-coins").textContent=$("game-coins").textContent;game.classList.add("hidden");home.classList.remove("hidden");document.dispatchEvent(new Event("fruitmatch:stop"));}
  function showGame(){home.classList.add("hidden");game.classList.remove("hidden");document.dispatchEvent(new CustomEvent("fruitmatch:start",{detail:{level:selected}}));}
  document.querySelectorAll(".level-node").forEach(node=>node.addEventListener("click",()=>selectLevel(Number(node.dataset.level))));
  $("play-button").addEventListener("click",showGame);
