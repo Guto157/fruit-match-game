@@ -51,8 +51,8 @@
   saveResults(results);$('home-coins').textContent=event.detail.coins;updateMap();
  });
  const shopOverlay=$('shop-overlay');
- const shopPrices={undo:80,shuffle:120,hint:40};
- function readInventory(){try{const data=JSON.parse(localStorage.getItem('fruitmatch.inventory')||'{}')||{};return {undo:Math.max(0,Number(data.undo)||0),shuffle:Math.max(0,Number(data.shuffle)||0),hint:Math.max(0,Number(data.hint)||0)};}catch(_){return {undo:0,shuffle:0,hint:0};}}
+ const shopPrices={undo:80,extraSlot:120,hint:40};
+ function readInventory(){try{const data=JSON.parse(localStorage.getItem('fruitmatch.inventory')||'{}')||{};return {undo:Math.max(0,Number(data.undo)||0),extraSlot:Math.max(0,Number(data.extraSlot)||0),hint:Math.max(0,Number(data.hint)||0)};}catch(_){return {undo:0,extraSlot:0,hint:0};}}
  function renderShop(){const saved=localStorage.getItem('fruitmatch.coins'),balance=Math.max(0,saved===null?(Number($('home-coins').textContent)||0):(Number(saved)||0)),stock=readInventory();$('shop-coins').textContent=balance.toLocaleString('pt-BR');Object.keys(stock).forEach(key=>$('stock-'+key).textContent='No estoque: '+stock[key]);}
  function openShop(){renderShop();shopOverlay.classList.remove('hidden');}
  function closeShop(){shopOverlay.classList.add('hidden');}
