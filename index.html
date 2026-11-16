@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17152b">
 <title>Fruit Match</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=level-details-20261116">
 </head>
 <body>
 <main id="home-screen" class="screen home-screen">
@@ -34,6 +34,19 @@
     <button class="nav-item" data-panel="upgrades"><span>⚡</span><small>Upgrades</small></button>
     <button class="nav-item" data-panel="videos"><span>🎬</span><small>Vídeos</small></button>
   </nav>
+  <div class="level-detail-overlay hidden" id="level-detail-overlay" role="dialog" aria-modal="true" aria-labelledby="level-detail-title">
+    <section class="level-detail-card">
+      <button class="level-detail-close" id="level-detail-close" aria-label="Fechar">×</button>
+      <p class="eyebrow">DETALHES DA FASE</p>
+      <h2 id="level-detail-title">FASE 01</h2>
+      <div class="level-detail-stars" id="level-detail-stars" aria-label="0 de 3 estrelas">☆☆☆</div>
+      <div class="level-detail-stats">
+        <div><small>MELHOR TEMPO</small><strong id="level-detail-time">--:--</strong></div>
+        <div><small>RECORDE</small><strong id="level-detail-status">Não concluída</strong></div>
+      </div>
+      <button class="play-button level-detail-play" id="level-detail-play">JOGAR <span>▶</span></button>
+    </section>
+  </div>
   <div class="home-notice" id="home-notice" role="status">Selecione uma fase no mapa para jogar.</div>
 </main>
 <main id="game-screen" class="screen game-screen hidden">
@@ -59,6 +72,6 @@
 <div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
  <div class="modal"><div class="modal-icon" id="modal-icon">🎉</div><p class="eyebrow" id="modal-eyebrow">MUITO BEM!</p><h2 id="modal-title">Fase concluída!</h2><p id="modal-message"></p><button class="play-button modal-btn" id="modal-action">VOLTAR AO MAPA</button></div>
 </div>
-<script src="js/game.js"></script>
-<script src="js/app.js"></script>
+<script src="js/game.js?v=level-details-20261116"></script>
+<script src="js/app.js?v=level-details-20261116"></script>
 </body></html>
